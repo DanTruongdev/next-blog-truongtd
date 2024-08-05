@@ -14,6 +14,10 @@ namespace BlogOnline.Services.Services
             _categoryRepository = blogRepository;
         }
 
+        /**
+         * Retrieves all categories.
+         * @return A list of all categories.
+         */
         public async Task<IEnumerable<CategoryRes>> GetAllCategoryAsync()
         {
             var categoryList = await _categoryRepository.GetAllAsync();

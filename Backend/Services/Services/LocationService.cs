@@ -17,18 +17,20 @@ namespace BlogOnline.Services.Services
             _locationRepository = blogRepository;
         }
 
+        /**
+         * Retrieves all locations.
+         * @return A list of all locations.
+         */
         public async Task<IEnumerable<LocationRes>> GetAllLocationAsync()
         {
             var locationList = await _locationRepository.GetAllAsync();
             if (!locationList.Any()) return new List<LocationRes>();
             var resData = locationList.Select(l => new LocationRes
             {
-               Id = l.Id,
-               Name = l.Name,
+                Id = l.Id,
+                Name = l.Name,
             });
             return resData;
         }
-
-       
     }
 }

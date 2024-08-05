@@ -1,5 +1,7 @@
 ﻿using BlogOnline.Models.DTOs.Responses;
+using BlogOnline.Models.Entities;
 using BlogOnline.Services.Interfaces;
+using BlogOnline.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogOnline.Controllers
@@ -9,25 +11,37 @@ namespace BlogOnline.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<Category> _logger;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, ILogger<Category> logger)
         {
-            _categoryService = categoryService;    
+            _categoryService = categoryService;
+            _logger = logger;
         }
 
+
+        /**
+       * Retrieves all categories.
+       * @return A list of all categories.
+       */
         [HttpGet]
         public async Task<IActionResult> GetAllCategory()
         {
-            var categoryList = await _categoryService.GetAllCategoryAsync();
-            return Ok(categoryList);
+            try
+            {
+                var categoryList = await _categoryService.GetAllCategoryAsync();
+                return Ok(categoryList);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", e.Message));
+            }
+            
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetLocationById([FromRoute]Guid id)
-        //{
-        //    var blog = await _locationService(id);
-        //    return Ok(blog);
-        //}
+       
        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BlogOnline.Models.DTOs.Responses;
+using BlogOnline.Models.Entities;
 using BlogOnline.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,25 +10,33 @@ namespace BlogOnline.Controllers
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;
+        private readonly ILogger<Location> _logger;
 
-        public LocationController(ILocationService locationService)
+        public LocationController(ILocationService locationService, ILogger<Location> logger)
         {
-            _locationService = locationService;    
+            _locationService = locationService;
+            _logger = logger;
         }
 
+
+
+        /**
+         * Retrieves all locations.
+         * @return A list of all locations.
+         */
         [HttpGet]
         public async Task<IActionResult> GetAllLocation()
         {
-            var locationList = await _locationService.GetAllLocationAsync();
-            return Ok(locationList);
-        }
+            try
+            {
+                var locationList = await _locationService.GetAllLocationAsync();
+                return Ok(locationList);
 
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetLocationById([FromRoute]Guid id)
-        //{
-        //    var blog = await _locationService(id);
-        //    return Ok(blog);
-        //}
-       
+            } catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", e.Message));
+            }
+        }
     }
 }

@@ -16,6 +16,11 @@ namespace BlogOnline.Services.Services
             _blogRepository = blogRepository;
         }
 
+        /**
+         * Adds a new blog.
+         * @param form The blog data transfer object containing the blog details.
+         * @return The created blog.
+         */
         public async Task<Blog> AddBlogAsync(BlogDto form)
         {
             var newBlog = new Blog()
@@ -36,11 +41,14 @@ namespace BlogOnline.Services.Services
             }
             catch (Exception ex)
             {
-
                 return null;
             }
         }
 
+        /**
+         * Retrieves all blogs.
+         * @return A list of all blogs.
+         */
         public async Task<IEnumerable<BlogRes>> GetAllBlogsAsync()
         {
             var blogs = await _blogRepository.GetAllAsync();
@@ -68,6 +76,11 @@ namespace BlogOnline.Services.Services
             return response;
         }
 
+        /**
+         * Retrieves a blog by its ID.
+         * @param id The ID of the blog.
+         * @return The blog with the specified ID.
+         */
         public async Task<BlogRes> GetBlogByIdAsync(Guid id)
         {
             Blog blog = await _blogRepository.GetByIdAsync(id);
@@ -94,9 +107,13 @@ namespace BlogOnline.Services.Services
             return blogRes;
         }
 
+        /**
+         * Removes a blog by its ID.
+         * @param id The ID of the blog to be removed.
+         * @return A boolean indicating whether the removal was successful.
+         */
         public async Task<bool> RemoveBlogAsync(Guid id)
         {
-
             try
             {
                 var deleteBlog = await _blogRepository.GetByIdAsync(id);
@@ -111,6 +128,11 @@ namespace BlogOnline.Services.Services
             }
         }
 
+        /**
+         * Searches for blogs based on a search string.
+         * @param searchString The search string to filter blogs.
+         * @return A list of blogs that match the search criteria.
+         */
         public async Task<IEnumerable<BlogRes>> SearchBlogAsync(string searchString)
         {
             var searchResult = await _blogRepository.SearchAsync(b => b.Title.Contains(searchString));
@@ -134,14 +156,17 @@ namespace BlogOnline.Services.Services
                     Name = b.Category.Name
                 },
                 PublicDate = b.PublictDate
-
             });
             return returnData;
         }
 
+        /**
+         * Updates an existing blog.
+         * @param form The blog data transfer object containing the updated blog details.
+         * @return A boolean indicating whether the update was successful.
+         */
         public async Task<bool> UpdateBlogAsync(BlogDto form)
         {
-
             try
             {
                 var blogExisting = await _blogRepository.GetByIdAsync(form.Id.Value);
